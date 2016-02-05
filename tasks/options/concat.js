@@ -280,11 +280,6 @@ module.exports = {
         dest: '<%= modules_dir %>/flexgrid.js'
     },
 
-    pixidefs: {
-        src: require('../manifests/pixidefs'),
-        dest: '<%= modules_dir %>/pixidefs.js'
-    },
-    
     outro: {
         src: require('../manifests/outro'),
         dest: '<%= modules_dir %>/outro.js'
