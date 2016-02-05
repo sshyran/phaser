@@ -536,7 +536,8 @@ Phaser.Game.prototype = {
 
         if (this.resolution === 0)
         {
-            this.resolution = this.device.pixelRatio;
+            // this.resolution = this.device.pixelRatio;
+            this.resolution = 1;
         }
 
         // this.width *= this.resolution;
@@ -555,8 +556,6 @@ Phaser.Game.prototype = {
         this.onFocus = new Phaser.Signal();
 
         this.isBooted = true;
-
-        PIXI.game = this;
 
         this.math = Phaser.Math;
 

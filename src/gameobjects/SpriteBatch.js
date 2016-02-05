@@ -24,7 +24,12 @@ Phaser.SpriteBatch = function (game, parent, name, addToStage) {
 
     if (parent === undefined || parent === null) { parent = game.world; }
 
-    PIXI.SpriteBatch.call(this);
+    PIXI.ParticleContainer.call(this, 15000, {
+        scale: true,
+        position: true,
+        rotation: true,
+        alpha: true
+    });
 
     Phaser.Group.call(this, game, parent, name, addToStage);
 
@@ -36,6 +41,6 @@ Phaser.SpriteBatch = function (game, parent, name, addToStage) {
 
 };
 
-Phaser.SpriteBatch.prototype = Phaser.Utils.extend(true, Phaser.SpriteBatch.prototype, Phaser.Group.prototype, PIXI.SpriteBatch.prototype);
+Phaser.SpriteBatch.prototype = Phaser.Utils.extend(true, Phaser.SpriteBatch.prototype, Phaser.Group.prototype, PIXI.ParticleContainer.prototype);
 
 Phaser.SpriteBatch.prototype.constructor = Phaser.SpriteBatch;
