@@ -82,12 +82,6 @@ Phaser.Stage = function (game) {
     */
     this._bgColor = { r: 0, g: 0, b: 0, a: 0, color: 0, rgba: '#000000' };
 
-    if (!this.game.transparent)
-    {
-        //  transparent = 0,0,0,0 - otherwise r,g,b,1
-        this._bgColor.a = 1;
-    }
-
     if (game.config)
     {
         this.parseConfig(game.config);
@@ -343,11 +337,7 @@ Phaser.Stage.prototype.setBackgroundColor = function (color) {
     Phaser.Color.valueToColor(color, this._bgColor);
     Phaser.Color.updateColor(this._bgColor);
 
-    //  For gl.clearColor (canvas uses _bgColor.rgba)
-    this._bgColor.r /= 255;
-    this._bgColor.g /= 255;
-    this._bgColor.b /= 255;
-    this._bgColor.a = 1;
+    this.game.renderer.backgroundColor = this._bgColor.color;
 
 };
 
