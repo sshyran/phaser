@@ -72,7 +72,6 @@ module.exports = function (grunt) {
             'particles':        { 'description': 'Arcade Physics Particle System',              'optional': true, 'stub': true },
             'creature':         { 'description': 'Creature Animation Tool Support',             'optional': true, 'stub': false },
             'video':            { 'description': 'Video Game Object',                           'optional': true, 'stub': false },
-            'pixidefs':         { 'description': 'Pixi defaults',                               'optional': true, 'stub': false },
             'outro':            { 'description': 'Phaser UMD closure',                          'optional': true, 'stub': false }
         };
 
@@ -220,38 +219,9 @@ module.exports = function (grunt) {
 
                 grunt.log.writeln("-> PIXI");
                 
-                if (!excludedKeys['intro'])
-                {
-                    tasks.push('concat:pixiIntro');
-                    pixiFilelist.push('<%= modules_dir %>/pixi-intro.js');
-                }
-
                 tasks.push('concat:pixiMain');
                 pixiFilelist.push('<%= modules_dir %>/pixi-main.js');
                 
-                //  Optional Rope
-                if (!excludedKeys['rope'])
-                {
-                    grunt.log.writeln("-> PIXI.Rope");
-                    tasks.push('concat:pixiRope');
-                    pixiFilelist.push('<%= modules_dir %>/pixi-rope.js');
-                }
-
-                //  Optional Tilesprite
-                if (!excludedKeys['tilesprite'])
-                {
-                    grunt.log.writeln("-> PIXI.TileSprite");
-                    tasks.push('concat:pixiTileSprite');
-                    pixiFilelist.push('<%= modules_dir %>/pixi-tilesprite.js');
-                }
-
-                //  PIXI Outro
-                if (!excludedKeys['outro'])
-                {
-                    tasks.push('concat:pixiOutro');
-                    pixiFilelist.push('<%= modules_dir %>/pixi-outro.js');
-                }
-
                 grunt.config.set('pixiFilelist', pixiFilelist);
 
                 tasks.push('concat:pixi');
@@ -293,37 +263,8 @@ module.exports = function (grunt) {
 
                 grunt.log.writeln("-> PIXI");
                 
-                if (!excludedKeys['intro'])
-                {
-                    tasks.push('concat:pixiIntro');
-                    filelist.push('<%= modules_dir %>/pixi-intro.js');
-                }
-
                 tasks.push('concat:pixiMain');
                 filelist.push('<%= modules_dir %>/pixi-main.js');
-                
-                //  Optional Rope
-                if (!excludedKeys['rope'])
-                {
-                    grunt.log.writeln("-> PIXI.Rope");
-                    tasks.push('concat:pixiRope');
-                    filelist.push('<%= modules_dir %>/pixi-rope.js');
-                }
-
-                //  Optional Tilesprite
-                if (!excludedKeys['tilesprite'])
-                {
-                    grunt.log.writeln("-> PIXI.TileSprite");
-                    tasks.push('concat:pixiTileSprite');
-                    filelist.push('<%= modules_dir %>/pixi-tilesprite.js');
-                }
-
-                //  PIXI Outro
-                if (!excludedKeys['outro'])
-                {
-                    tasks.push('concat:pixiOutro');
-                    filelist.push('<%= modules_dir %>/pixi-outro.js');
-                }
             }
 
             //  And now for Phaser

@@ -25,31 +25,11 @@ module.exports = {
         dest: '<%= compile_dir %>/p2.js'
     },
 
-    pixiIntro: {
-        src: require('../manifests/pixi-intro'),
-        dest: '<%= modules_dir %>/pixi-intro.js'
-    },
-
     pixiMain: {
         src: require('../manifests/pixi-main'),
         dest: '<%= modules_dir %>/pixi-main.js'
     },
     
-    pixiRope: {
-        src: require('../manifests/pixi-rope'),
-        dest: '<%= modules_dir %>/pixi-rope.js'
-    },
-
-    pixiTileSprite: {
-        src: require('../manifests/pixi-tilesprite'),
-        dest: '<%= modules_dir %>/pixi-tilesprite.js'
-    },
-
-    pixiOutro: {
-        src: require('../manifests/pixi-outro'),
-        dest: '<%= modules_dir %>/pixi-outro.js'
-    },
-
     intro: {
         src: require('../manifests/intro'),
         dest: '<%= modules_dir %>/intro.js'
