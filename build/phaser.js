@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.5 "Sienda" - Built: Fri Feb 05 2016 20:58:59
+* v2.4.5 "Sienda" - Built: Fri Feb 05 2016 23:00:00
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -63816,9 +63816,19 @@ Phaser.Component.Core.init = function (game, x, y, key, frame) {
 
     this.key = key;
 
-    this.position.set(x, y);
+    this.position = new Phaser.Point(x, y);
     this.world = new Phaser.Point(x, y);
     this.previousPosition = new Phaser.Point(x, y);
+
+    if (this.anchor)
+    {
+        this.anchor = new Phaser.Point(0, 0);
+    }
+
+    if (this.scale)
+    {
+        this.scale = new Phaser.Point(1, 1);
+    }
 
     this.events = new Phaser.Events(this);
 

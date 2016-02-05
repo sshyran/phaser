@@ -430,11 +430,6 @@ EOL;
 EOL;
     }
 
-        echo <<<EOL
-    <script src="$path/src/pixi/Override.js"></script>
-
-EOL;
-
     if (isset($custom))
     {
         for ($i = 0; $i < count($custom); $i++)
