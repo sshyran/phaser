@@ -282,10 +282,7 @@ Phaser.Cache.prototype = {
 
         var obj = this.addImage('__default', null, img);
 
-        //  Because we don't want to invalidate the sprite batch for an invisible texture
-        obj.base.skipRender = true;
-
-        PIXI.TextureCache['__default'] = new PIXI.Texture(obj.base);
+        PIXI.utils.TextureCache['__default'] = new PIXI.Texture(obj.base);
 
     },
 
@@ -306,7 +303,7 @@ Phaser.Cache.prototype = {
 
         var obj = this.addImage('__missing', null, img);
 
-        PIXI.TextureCache['__missing'] = new PIXI.Texture(obj.base);
+        PIXI.utils.TextureCache['__missing'] = new PIXI.Texture(obj.base);
 
     },
 
@@ -1557,7 +1554,7 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Gets a PIXI.Texture by key from the PIXI.TextureCache.
+    * Gets a PIXI.Texture by key from the PIXI.utils.TextureCache.
     *
     * If the texture isn't found in the cache, then it searches the Phaser Image Cache and
     * creates a new PIXI.Texture object which is then returned.
@@ -1569,9 +1566,9 @@ Phaser.Cache.prototype = {
     */
     getPixiTexture: function (key) {
 
-        if (PIXI.TextureCache[key])
+        if (PIXI.utils.TextureCache[key])
         {
-            return PIXI.TextureCache[key];
+            return PIXI.utils.TextureCache[key];
         }
         else
         {

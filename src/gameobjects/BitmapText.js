@@ -31,7 +31,7 @@
 *
 * @class Phaser.BitmapText
 * @constructor
-* @extends PIXI.DisplayObjectContainer
+* @extends PIXI.Container
 * @extends Phaser.Component.Core
 * @extends Phaser.Component.Angle
 * @extends Phaser.Component.AutoCull
@@ -60,7 +60,7 @@ Phaser.BitmapText = function (game, x, y, font, text, size, align) {
     size = size || 32;
     align = align || 'left';
 
-    PIXI.DisplayObjectContainer.call(this);
+    PIXI.Container.call(this);
 
     /**
     * @property {number} type - The const type of this object.
@@ -156,7 +156,7 @@ Phaser.BitmapText = function (game, x, y, font, text, size, align) {
 
 };
 
-Phaser.BitmapText.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+Phaser.BitmapText.prototype = Object.create(PIXI.Container.prototype);
 Phaser.BitmapText.prototype.constructor = Phaser.BitmapText;
 
 Phaser.Component.Core.install.call(Phaser.BitmapText.prototype, [
@@ -523,7 +523,7 @@ Phaser.BitmapText.prototype.updateTransform = function () {
         this._prevAnchor.copyFrom(this.anchor);
     }
 
-    PIXI.DisplayObjectContainer.prototype.updateTransform.call(this);
+    PIXI.Container.prototype.updateTransform.call(this);
 
 };
 

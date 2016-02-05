@@ -85,13 +85,13 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
 
     var def = game.cache.getImage('__default', true);
 
-    PIXI.TilingSprite.call(this, new PIXI.Texture(def.base), width, height);
+    PIXI.extras.TilingSprite.call(this, new PIXI.Texture(def.base), width, height);
 
     Phaser.Component.Core.init.call(this, game, x, y, key, frame);
 
 };
 
-Phaser.TileSprite.prototype = Object.create(PIXI.TilingSprite.prototype);
+Phaser.TileSprite.prototype = Object.create(PIXI.extras.TilingSprite.prototype);
 Phaser.TileSprite.prototype.constructor = Phaser.TileSprite;
 
 Phaser.Component.Core.install.call(Phaser.TileSprite.prototype, [

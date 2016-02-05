@@ -1838,7 +1838,7 @@ Phaser.BitmapData.prototype = {
 
         if (!this.disableTextureUpload && this.dirty)
         {
-            this.baseTexture.dirty();
+            // this.baseTexture.dirty();
             this.dirty = false;
         }
 

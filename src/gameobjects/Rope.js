@@ -56,13 +56,13 @@ Phaser.Rope = function (game, x, y, key, frame, points) {
     */
     this.type = Phaser.ROPE;
 
-    PIXI.Rope.call(this, PIXI.TextureCache['__default'], this.points);
+    PIXI.mesh.Rope.call(this, PIXI.utils.TextureCache['__default'], this.points);
 
     Phaser.Component.Core.init.call(this, game, x, y, key, frame);
 
 };
 
-Phaser.Rope.prototype = Object.create(PIXI.Rope.prototype);
+Phaser.Rope.prototype = Object.create(PIXI.mesh.Rope.prototype);
 Phaser.Rope.prototype.constructor = Phaser.Rope;
 
 Phaser.Component.Core.install.call(Phaser.Rope.prototype, [

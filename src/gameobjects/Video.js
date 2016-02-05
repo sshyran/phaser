@@ -249,7 +249,7 @@ Phaser.Video = function (game, key, url) {
     }
     else
     {
-        this.baseTexture = new PIXI.BaseTexture(PIXI.TextureCache['__default'].baseTexture.source);
+        this.baseTexture = new PIXI.BaseTexture(PIXI.utils.TextureCache['__default'].baseTexture.source);
         this.baseTexture.forceLoaded(this.width, this.height);
     }
 
@@ -852,7 +852,7 @@ Phaser.Video.prototype = {
 
         if (!this.disableTextureUpload && this.playing)
         {
-            this.baseTexture.dirty();
+            // this.baseTexture.dirty();
         }
 
     },

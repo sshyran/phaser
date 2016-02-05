@@ -15,7 +15,7 @@
 * Groups are also display objects and can be nested as children within other Groups.
 * 
 * @class Phaser.Group
-* @extends PIXI.DisplayObjectContainer
+* @extends PIXI.Container
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {DisplayObject|null} [parent=(game world)] - The parent Group (or other {@link DisplayObject}) that this group will be added to.
 *     If undefined/unspecified the Group will be added to the {@link Phaser.Game#world Game World}; if null the Group will not be added to any parent.
@@ -56,7 +56,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
     */
     this.z = 0;
 
-    PIXI.DisplayObjectContainer.call(this);
+    PIXI.Container.call(this);
 
     if (addToStage)
     {
@@ -231,7 +231,7 @@ Phaser.Group = function (game, parent, name, addToStage, enableBody, physicsBody
 
 };
 
-Phaser.Group.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+Phaser.Group.prototype = Object.create(PIXI.Container.prototype);
 Phaser.Group.prototype.constructor = Phaser.Group;
 
 /**
@@ -289,7 +289,7 @@ Phaser.Group.prototype.add = function (child, silent) {
 
     if (child.parent !== this)
     {
-        if (child.body)
+        if (child.body && child.parent)
         {
             child.parent.removeFromHash(child);
         }

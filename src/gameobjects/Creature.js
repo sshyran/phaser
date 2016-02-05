@@ -22,7 +22,7 @@
 * So you'll need to do `grunt custom` to create a build that includes them.
 *
 * @class Phaser.Creature
-* @extends PIXI.DisplayObjectContainer
+* @extends PIXI.Container
 * @extends Phaser.Component.Core
 * @extends Phaser.Component.Angle
 * @extends Phaser.Component.AutoCull
@@ -93,7 +93,7 @@ Phaser.Creature = function (game, x, y, key, mesh, animation) {
     */
     this.texture = texture;
 
-    PIXI.DisplayObjectContainer.call(this);
+    PIXI.Container.call(this);
 
     this.dirty = true;
     this.blendMode = PIXI.blendModes.NORMAL;
@@ -150,7 +150,7 @@ Phaser.Creature = function (game, x, y, key, mesh, animation) {
 
 };
 
-Phaser.Creature.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+Phaser.Creature.prototype = Object.create(PIXI.Container.prototype);
 Phaser.Creature.prototype.constructor = Phaser.Creature;
 
 Phaser.Component.Core.install.call(Phaser.Creature.prototype, [

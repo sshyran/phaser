@@ -75,7 +75,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @readonly
     * @default
     */
-    this.resolution = 1;
+    this.resolution = 0;
 
     /**
     * @property {integer} _width - Private internal var.
@@ -114,6 +114,10 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @default
     */
     this.clearBeforeRender = true;
+
+    this.autoResize = false;
+    this.roundPixels = false;
+    this.forceFXAA = false;
 
     /**
     * @property {PIXI.CanvasRenderer|PIXI.WebGLRenderer} renderer - The Pixi Renderer.
@@ -530,6 +534,14 @@ Phaser.Game.prototype = {
             return;
         }
 
+        if (this.resolution === 0)
+        {
+            this.resolution = this.device.pixelRatio;
+        }
+
+        // this.width *= this.resolution;
+        // this.height *= this.resolution;
+
         //  The game width / height must be an integer
         this.width = Math.floor(this.width);
         this.height = Math.floor(this.height);
@@ -688,6 +700,8 @@ Phaser.Game.prototype = {
     */
     setUpRenderer: function () {
 
+        PIXI.utils._saidHello = true;
+
         this.canvas = Phaser.Canvas.create(this, this.width, this.height, this.config['canvasID'], true);
 
         if (this.config['canvasStyle'])
@@ -706,7 +720,18 @@ Phaser.Game.prototype = {
                 //  They requested Canvas and their browser supports it
                 this.renderType = Phaser.CANVAS;
 
-                this.renderer = new PIXI.CanvasRenderer(this);
+                this.renderer = new PIXI.CanvasRenderer(
+                    this.width,
+                    this.height,
+                    {
+                        view: this.canvas,
+                        transparent: this.transparent,
+                        autoResize: this.autoResize,
+                        antialias: this.antialias,
+                        resolution: this.resolution,
+                        clearBeforeRender: this.clearBeforeRender,
+                        roundPixels: this.roundPixels
+                    });
 
                 this.context = this.renderer.context;
             }
@@ -720,7 +745,20 @@ Phaser.Game.prototype = {
             //  They requested WebGL and their browser supports it
             this.renderType = Phaser.WEBGL;
 
-            this.renderer = new PIXI.WebGLRenderer(this);
+            this.renderer = new PIXI.WebGLRenderer(
+                this.width,
+                this.height,
+                {
+                    view: this.canvas,
+                    transparent: this.transparent,
+                    autoResize: this.autoResize,
+                    antialias: this.antialias,
+                    forceFXAA: this.forceFXAA,
+                    resolution: this.resolution,
+                    clearBeforeRender: this.clearBeforeRender,
+                    preserveDrawingBuffer: this.preserveDrawingBuffer,
+                    roundPixels: this.roundPixels
+                });
 
             this.context = null;
 

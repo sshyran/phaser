@@ -65,7 +65,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     */
     this.context = this.canvas.getContext('2d');
 
-    this.setTexture(new PIXI.Texture(new PIXI.BaseTexture(this.canvas)));
+    this.texture = new PIXI.Texture(new PIXI.BaseTexture(this.canvas));
 
     /**
     * The const type of this object.
@@ -343,7 +343,7 @@ Phaser.TilemapLayer.prototype.resize = function (width, height) {
     this.texture.baseTexture.width = width;
     this.texture.baseTexture.height = height;
 
-    this.texture.baseTexture.dirty();
+    // this.texture.baseTexture.dirty();
     this.texture.requiresUpdate = true;
 
     this.texture._updateUvs();
@@ -1075,7 +1075,7 @@ Phaser.TilemapLayer.prototype.render = function () {
         this.renderDebug();
     }
 
-    this.texture.baseTexture.dirty();
+    // this.texture.baseTexture.dirty();
 
     this.dirty = false;
 

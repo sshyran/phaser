@@ -129,7 +129,10 @@ Phaser.Component.Core.preUpdate = function () {
 
     for (var i = 0; i < this.children.length; i++)
     {
-        this.children[i].preUpdate();
+        if (this.children[i].preUpdate)
+        {
+            this.children[i].preUpdate();
+        }
     }
 
     return true;

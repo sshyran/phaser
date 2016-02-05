@@ -1336,7 +1336,7 @@ Phaser.Text.prototype.updateTexture = function () {
 
     this.texture.requiresReTint = true;
 
-    this.texture.baseTexture.dirty();
+    // this.texture.baseTexture.dirty();
 
 };
 

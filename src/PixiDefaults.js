@@ -12,9 +12,9 @@ if (PIXI.blendModes === undefined)
     PIXI.blendModes = Phaser.blendModes;
 }
 
-if (PIXI.scaleModes === undefined)
+if (PIXI.SCALE_MODES === undefined)
 {
-    PIXI.scaleModes = Phaser.scaleModes;
+    PIXI.SCALE_MODES = Phaser.scaleModes;
 }
 
 if (PIXI.Texture.emptyTexture === undefined)

@@ -73,13 +73,13 @@ Phaser.Component.LoadTexture.prototype = {
         if (Phaser.RenderTexture && key instanceof Phaser.RenderTexture)
         {
             this.key = key.key;
-            this.setTexture(key);
+            this.texture = key;
         }
         else if (Phaser.BitmapData && key instanceof Phaser.BitmapData)
         {
             this.customRender = true;
 
-            this.setTexture(key.texture);
+            this.texture = key.texture;
 
             if (cache.hasFrameData(key.key, Phaser.Cache.BITMAPDATA))
             {
@@ -92,31 +92,21 @@ Phaser.Component.LoadTexture.prototype = {
 
             //  This works from a reference, which probably isn't what we need here
             var valid = key.texture.valid;
-            this.setTexture(key.texture);
+            this.texture = key.texture;
             this.setFrame(key.texture.frame.clone());
             key.onChangeSource.add(this.resizeFrame, this);
             this.texture.valid = valid;
         }
         else if (key instanceof PIXI.Texture)
         {
-            this.setTexture(key);
+            this.texture = key;
         }
         else
         {
             var img = cache.getImage(key, true);
 
             this.key = img.key;
-            this.setTexture(new PIXI.Texture(img.base));
-
-            if (key === '__default')
-            {
-                this.texture.baseTexture.skipRender = true;
-            }
-            else
-            {
-                this.texture.baseTexture.skipRender = false;
-            }
-
+            this.texture = new PIXI.Texture(img.base);
             setFrame = !this.animations.loadFrameData(img.frameData, frame);
         }
         
