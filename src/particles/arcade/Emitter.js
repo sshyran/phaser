@@ -393,7 +393,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
 
         particle.exists = false;
         particle.visible = false;
-        particle.anchor.copy(this.particleAnchor);
+        particle.anchor.copyFrom(this.particleAnchor);
 
         this.add(particle);
 
