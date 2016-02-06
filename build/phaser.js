@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.5 "Sienda" - Built: Sat Feb 06 2016 00:01:16
+* v2.4.5 "Sienda" - Built: Sat Feb 06 2016 02:55:35
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -45649,6 +45649,40 @@ Phaser.Matrix.prototype = {
 
         return this.setTo(1, 0, 0, 1, 0, 0);
 
+    },
+
+    /**
+    * 
+    * 
+    * @method Phaser.Matrix#setTransform
+    * @return {Phaser.Matrix} This Matrix object.
+    */
+    setTransform: function (x, y, pivotX, pivotY, scaleX, scaleY, rotation, skewX, skewY) {
+
+        var a, b, c, d, sr, cr, cy, sy, nsx, cx;
+
+        sr  = Math.sin(rotation);
+        cr  = Math.cos(rotation);
+        cy  = Math.cos(skewY);
+        sy  = Math.sin(skewY);
+        nsx = -Math.sin(skewX);
+        cx  =  Math.cos(skewX);
+
+        a  =  cr * scaleX;
+        b  =  sr * scaleX;
+        c  = -sr * scaleY;
+        d  =  cr * scaleY;
+
+        this.a  = cy * a + sy * c;
+        this.b  = cy * b + sy * d;
+        this.c  = nsx * a + cx * c;
+        this.d  = nsx * b + cx * d;
+
+        this.tx = x + ( pivotX * a + pivotY * c );
+        this.ty = y + ( pivotX * b + pivotY * d );
+
+        return this;
+
     }
 
 };
@@ -50206,32 +50240,6 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
     this.type = Phaser.WEBGL_FILTER;
 
     /**
-    * An array of passes - some filters contain a few steps this array simply stores the steps in a linear fashion.
-    * For example the blur filter has two passes blurX and blurY.
-    * @property {array} passes - An array of filter objects.
-    * @private
-    */
-    this.passes = [this];
-
-    /**
-    * @property {array} shaders - Array an array of shaders.
-    * @private
-    */
-    this.shaders = [];
-
-    /**
-    * @property {boolean} dirty - Internal PIXI var.
-    * @default
-    */
-    this.dirty = true;
-
-    /**
-    * @property {number} padding - Internal PIXI var.
-    * @default
-    */
-    this.padding = 0;
-
-    /**
     * @property {Phaser.Point} prevPoint - The previous position of the pointer (we don't update the uniform if the same)
     */
     this.prevPoint = new Phaser.Point();
@@ -50245,7 +50253,7 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
     /**
     * @property {object} uniforms - Default uniform mappings. Compatible with ShaderToy and GLSLSandbox.
     */
-    this.uniforms = {
+    var defaultUniforms = {
 
         resolution: { type: '2f', value: { x: 256, y: 256 }},
         time: { type: '1f', value: 0 },
@@ -50264,131 +50272,131 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
     {
         for (var key in uniforms)
         {
-            this.uniforms[key] = uniforms[key];
+            defaultUniforms[key] = uniforms[key];
         }
     }
 
-    /**
-    * @property {array|string} fragmentSrc - The fragment shader code.
-    */
-    this.fragmentSrc = fragmentSrc || '';
-
-};
-
-Phaser.Filter.prototype = {
-
-    /**
-    * Should be over-ridden.
-    * @method Phaser.Filter#init
-    */
-    init: function () {
-        //  This should be over-ridden. Will receive a variable number of arguments.
-    },
-
-    /**
-    * Set the resolution uniforms on the filter.
-    * @method Phaser.Filter#setResolution
-    * @param {number} width - The width of the display.
-    * @param {number} height - The height of the display.
-    */
-    setResolution: function (width, height) {
-
-        this.uniforms.resolution.value.x = width;
-        this.uniforms.resolution.value.y = height;
-
-    },
-
-    /**
-    * Updates the filter.
-    * @method Phaser.Filter#update
-    * @param {Phaser.Pointer} [pointer] - A Pointer object to use for the filter. The coordinates are mapped to the mouse uniform.
-    */
-    update: function (pointer) {
-
-        if (typeof pointer !== 'undefined')
-        {
-            var x = pointer.x / this.game.width;
-            var y = 1 - pointer.y / this.game.height;
-
-            if (x !== this.prevPoint.x || y !== this.prevPoint.y)
-            {
-                this.uniforms.mouse.value.x = x.toFixed(2);
-                this.uniforms.mouse.value.y = y.toFixed(2);
-                this.prevPoint.set(x, y);
-            }
-        }
-
-        this.uniforms.time.value = this.game.time.totalElapsedSeconds();
-
-    },
-
-    /**
-    * Creates a new Phaser.Image object using a blank texture and assigns 
-    * this Filter to it. The image is then added to the world.
-    *
-    * If you don't provide width and height values then Filter.width and Filter.height are used.
-    *
-    * If you do provide width and height values then this filter will be resized to match those
-    * values.
-    *
-    * @method Phaser.Filter#addToWorld
-    * @param {number} [x=0] - The x coordinate to place the Image at.
-    * @param {number} [y=0] - The y coordinate to place the Image at.
-    * @param {number} [width] - The width of the Image. If not specified (or null) it will use Filter.width. If specified Filter.width will be set to this value.
-    * @param {number} [height] - The height of the Image. If not specified (or null) it will use Filter.height. If specified Filter.height will be set to this value.
-    * @param {number} [anchorX=0] - Set the x anchor point of the Image. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
-    * @param {number} [anchorY=0] - Set the y anchor point of the Image. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
-    * @return {Phaser.Image} The newly added Image object.
-    */
-    addToWorld: function (x, y, width, height, anchorX, anchorY) {
-
-        if (anchorX === undefined) { anchorX = 0; }
-        if (anchorY === undefined) { anchorY = 0; }
-
-        if (width !== undefined && width !== null)
-        {
-            this.width = width;
-        }
-        else
-        {
-            width = this.width;
-        }
-
-        if (height !== undefined && height !== null)
-        {
-            this.height = height;
-        }
-        else
-        {
-            height = this.height;
-        }
-
-        var image = this.game.add.image(x, y, '__default');
-
-        image.width = width;
-        image.height = height;
-
-        image.anchor.set(anchorX, anchorY);
-
-        image.filters = [ this ];
-
-        return image;
-
-    },
-
-    /**
-    * Clear down this Filter and null out references
-    * @method Phaser.Filter#destroy
-    */
-    destroy: function () {
-
-        this.game = null;
-
+    if (Array.isArray(fragmentSrc))
+    {
+        fragmentSrc = fragmentSrc.join("\n");
     }
 
+    PIXI.AbstractFilter.call(this, null, fragmentSrc, defaultUniforms);
+
 };
 
+Phaser.Filter.prototype = Object.create(PIXI.AbstractFilter.prototype);
 Phaser.Filter.prototype.constructor = Phaser.Filter;
+
+/**
+* Should be over-ridden.
+* @method Phaser.Filter#init
+*/
+Phaser.Filter.prototype.init = function () {
+    //  This should be over-ridden. Will receive a variable number of arguments.
+};
+
+/**
+* Set the resolution uniforms on the filter.
+* @method Phaser.Filter#setResolution
+* @param {number} width - The width of the display.
+* @param {number} height - The height of the display.
+*/
+Phaser.Filter.prototype.setResolution = function (width, height) {
+
+    this.uniforms.resolution.value.x = width;
+    this.uniforms.resolution.value.y = height;
+
+};
+
+/**
+* Updates the filter.
+* @method Phaser.Filter#update
+* @param {Phaser.Pointer} [pointer] - A Pointer object to use for the filter. The coordinates are mapped to the mouse uniform.
+*/
+Phaser.Filter.prototype.update = function (pointer) {
+
+    if (pointer)
+    {
+        var x = pointer.x / this.game.width;
+        var y = 1 - pointer.y / this.game.height;
+
+        if (x !== this.prevPoint.x || y !== this.prevPoint.y)
+        {
+            this.uniforms.mouse.value.x = x.toFixed(2);
+            this.uniforms.mouse.value.y = y.toFixed(2);
+            this.prevPoint.set(x, y);
+        }
+    }
+
+    this.uniforms.time.value = this.game.time.totalElapsedSeconds();
+
+};
+
+/**
+* Creates a new Phaser.Image object using a blank texture and assigns 
+* this Filter to it. The image is then added to the world.
+*
+* If you don't provide width and height values then Filter.width and Filter.height are used.
+*
+* If you do provide width and height values then this filter will be resized to match those
+* values.
+*
+* @method Phaser.Filter#addToWorld
+* @param {number} [x=0] - The x coordinate to place the Image at.
+* @param {number} [y=0] - The y coordinate to place the Image at.
+* @param {number} [width] - The width of the Image. If not specified (or null) it will use Filter.width. If specified Filter.width will be set to this value.
+* @param {number} [height] - The height of the Image. If not specified (or null) it will use Filter.height. If specified Filter.height will be set to this value.
+* @param {number} [anchorX=0] - Set the x anchor point of the Image. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
+* @param {number} [anchorY=0] - Set the y anchor point of the Image. A value between 0 and 1, where 0 is the top-left and 1 is bottom-right.
+* @return {Phaser.Image} The newly added Image object.
+*/
+Phaser.Filter.prototype.addToWorld = function (x, y, width, height, anchorX, anchorY) {
+
+    if (anchorX === undefined) { anchorX = 0; }
+    if (anchorY === undefined) { anchorY = 0; }
+
+    if (width !== undefined && width !== null)
+    {
+        this.width = width;
+    }
+    else
+    {
+        width = this.width;
+    }
+
+    if (height !== undefined && height !== null)
+    {
+        this.height = height;
+    }
+    else
+    {
+        height = this.height;
+    }
+
+    var image = this.game.add.image(x, y, '__default');
+
+    image.width = width;
+    image.height = height;
+
+    image.anchor.set(anchorX, anchorY);
+
+    image.filterArea = new Phaser.Rectangle(0, 0, width, height);
+    image.filters = [ this ];
+
+    return image;
+
+};
+
+/**
+* Clear down this Filter and null out references
+* @method Phaser.Filter#destroy
+*/
+Phaser.Filter.prototype.destroy = function () {
+
+    this.game = null;
+
+};
 
 /**
 * @name Phaser.Filter#width
@@ -69641,7 +69649,7 @@ Phaser.BitmapData.prototype = {
 
         if (!this.disableTextureUpload && this.dirty)
         {
-            // this.baseTexture.dirty();
+            this.baseTexture.update();
             this.dirty = false;
         }
 
@@ -70286,6 +70294,9 @@ Phaser.Graphics.prototype.drawTriangles = function(vertices, indices, cull) {
 /**
 * A RenderTexture is a special texture that allows any displayObject to be rendered to it. It allows you to take many complex objects and
 * render them down into a single quad (on WebGL) which can then be used to texture other display objects with. A way of generating textures at run-time.
+*
+* If you wish to render a single Sprite that is part of the Phaser.World, then make sure you place it
+* into a Phaser.Group first, otherwise it will render out at the incorrect location.
 * 
 * @class Phaser.RenderTexture
 * @constructor
@@ -70327,8 +70338,6 @@ Phaser.RenderTexture = function (game, width, height, key, scaleMode, resolution
 
     PIXI.RenderTexture.call(this, this.game.renderer, width, height, scaleMode, resolution);
 
-    this.render = Phaser.RenderTexture.prototype.render;
-
 };
 
 Phaser.RenderTexture.prototype = Object.create(PIXI.RenderTexture.prototype);
@@ -70336,6 +70345,8 @@ Phaser.RenderTexture.prototype.constructor = Phaser.RenderTexture;
 
 /**
 * This function will draw the display object to the RenderTexture at the given coordinates.
+*
+* This only works if the display object is NOT on the display list.
 *
 * When the display object is drawn it takes into account scale and rotation.
 *
@@ -70349,19 +70360,23 @@ Phaser.RenderTexture.prototype.constructor = Phaser.RenderTexture;
 */
 Phaser.RenderTexture.prototype.renderXY = function (displayObject, x, y, clear) {
 
-    displayObject.updateTransform();
+    if (x === undefined) { x = displayObject.x; }
+    if (y === undefined) { y = displayObject.y; }
 
-    this._tempMatrix.copyFrom(displayObject.worldTransform);
-    this._tempMatrix.tx = x;
-    this._tempMatrix.ty = y;
+    if (displayObject.worldTransform)
+    {
+        this._tempMatrix.setTransform(
+            x,
+            y,
+            0,
+            0,
+            displayObject.scale.x,
+            displayObject.scale.y,
+            displayObject.rotation,
+            0,
+            0);
 
-    if (this.renderer.type === PIXI.WEBGL_RENDERER)
-    {
-        this.renderWebGL(displayObject, this._tempMatrix, clear);
-    }
-    else
-    {
-        this.renderCanvas(displayObject, this._tempMatrix, clear);
+        this.render(displayObject, this._tempMatrix, clear, false);
     }
 
 };
@@ -70381,53 +70396,9 @@ Phaser.RenderTexture.prototype.renderXY = function (displayObject, x, y, clear) 
 */
 Phaser.RenderTexture.prototype.renderRawXY = function (displayObject, x, y, clear) {
 
-    this._tempMatrix.identity().translate(x, y);
+    this._tempMatrix.setTransform(x, y, 0, 0, 1, 1, 0, 0, 0);
 
-    if (this.renderer.type === PIXI.WEBGL_RENDERER)
-    {
-        this.renderWebGL(displayObject, this._tempMatrix, clear);
-    }
-    else
-    {
-        this.renderCanvas(displayObject, this._tempMatrix, clear);
-    }
-
-};
-
-/**
-* This function will draw the display object to the RenderTexture.
-*
-* In versions of Phaser prior to 2.4.0 the second parameter was a Phaser.Point object. 
-* This is now a Matrix allowing you much more control over how the Display Object is rendered.
-* If you need to replicate the earlier behavior please use Phaser.RenderTexture.renderXY instead.
-*
-* If you wish for the displayObject to be rendered taking its current scale, rotation and translation into account then either
-* pass `null`, leave it undefined or pass `displayObject.worldTransform` as the matrix value.
-*
-* @method Phaser.RenderTexture.prototype.render
-* @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapText|Phaser.Group} displayObject - The display object to render to this texture.
-* @param {Phaser.Matrix} [matrix] - Optional matrix to apply to the display object before rendering. If null or undefined it will use the worldTransform matrix of the given display object.
-* @param {boolean} [clear=false] - If true the texture will be cleared before the display object is drawn.
-*/
-Phaser.RenderTexture.prototype.render = function (displayObject, matrix, clear) {
-
-    if (matrix === undefined || matrix === null)
-    {
-        this._tempMatrix.copyFrom(displayObject.worldTransform);
-    }
-    else
-    {
-        this._tempMatrix.copyFrom(matrix);
-    }
-
-    if (this.renderer.type === PIXI.WEBGL_RENDERER)
-    {
-        this.renderWebGL(displayObject, this._tempMatrix, clear);
-    }
-    else
-    {
-        this.renderCanvas(displayObject, this._tempMatrix, clear);
-    }
+    this.render(displayObject, this._tempMatrix, clear, false);
 
 };
 
@@ -112091,7 +112062,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
 
         particle.exists = false;
         particle.visible = false;
-        particle.anchor.copy(this.particleAnchor);
+        particle.anchor.copyFrom(this.particleAnchor);
 
         this.add(particle);
 
@@ -113552,7 +113523,7 @@ Phaser.Video.prototype = {
 
         if (!this.disableTextureUpload && this.playing)
         {
-            // this.baseTexture.dirty();
+            this.baseTexture.update();
         }
 
     },
