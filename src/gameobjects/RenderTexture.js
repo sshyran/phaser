@@ -7,6 +7,9 @@
 /**
 * A RenderTexture is a special texture that allows any displayObject to be rendered to it. It allows you to take many complex objects and
 * render them down into a single quad (on WebGL) which can then be used to texture other display objects with. A way of generating textures at run-time.
+*
+* If you wish to render a single Sprite that is part of the Phaser.World, then make sure you place it
+* into a Phaser.Group first, otherwise it will render out at the incorrect location.
 * 
 * @class Phaser.RenderTexture
 * @constructor
@@ -48,8 +51,6 @@ Phaser.RenderTexture = function (game, width, height, key, scaleMode, resolution
 
     PIXI.RenderTexture.call(this, this.game.renderer, width, height, scaleMode, resolution);
 
-    this.render = Phaser.RenderTexture.prototype.render;
-
 };
 
 Phaser.RenderTexture.prototype = Object.create(PIXI.RenderTexture.prototype);
@@ -57,6 +58,8 @@ Phaser.RenderTexture.prototype.constructor = Phaser.RenderTexture;
 
 /**
 * This function will draw the display object to the RenderTexture at the given coordinates.
+*
+* This only works if the display object is NOT on the display list.
 *
 * When the display object is drawn it takes into account scale and rotation.
 *
@@ -70,19 +73,23 @@ Phaser.RenderTexture.prototype.constructor = Phaser.RenderTexture;
 */
 Phaser.RenderTexture.prototype.renderXY = function (displayObject, x, y, clear) {
 
-    displayObject.updateTransform();
+    if (x === undefined) { x = displayObject.x; }
+    if (y === undefined) { y = displayObject.y; }
 
-    this._tempMatrix.copyFrom(displayObject.worldTransform);
-    this._tempMatrix.tx = x;
-    this._tempMatrix.ty = y;
+    if (displayObject.worldTransform)
+    {
+        this._tempMatrix.setTransform(
+            x,
+            y,
+            0,
+            0,
+            displayObject.scale.x,
+            displayObject.scale.y,
+            displayObject.rotation,
+            0,
+            0);
 
-    if (this.renderer.type === PIXI.WEBGL_RENDERER)
-    {
-        this.renderWebGL(displayObject, this._tempMatrix, clear);
-    }
-    else
-    {
-        this.renderCanvas(displayObject, this._tempMatrix, clear);
+        this.render(displayObject, this._tempMatrix, clear, false);
     }
 
 };
@@ -102,52 +109,8 @@ Phaser.RenderTexture.prototype.renderXY = function (displayObject, x, y, clear) 
 */
 Phaser.RenderTexture.prototype.renderRawXY = function (displayObject, x, y, clear) {
 
-    this._tempMatrix.identity().translate(x, y);
+    this._tempMatrix.setTransform(x, y, 0, 0, 1, 1, 0, 0, 0);
 
-    if (this.renderer.type === PIXI.WEBGL_RENDERER)
-    {
-        this.renderWebGL(displayObject, this._tempMatrix, clear);
-    }
-    else
-    {
-        this.renderCanvas(displayObject, this._tempMatrix, clear);
-    }
-
-};
-
-/**
-* This function will draw the display object to the RenderTexture.
-*
-* In versions of Phaser prior to 2.4.0 the second parameter was a Phaser.Point object. 
-* This is now a Matrix allowing you much more control over how the Display Object is rendered.
-* If you need to replicate the earlier behavior please use Phaser.RenderTexture.renderXY instead.
-*
-* If you wish for the displayObject to be rendered taking its current scale, rotation and translation into account then either
-* pass `null`, leave it undefined or pass `displayObject.worldTransform` as the matrix value.
-*
-* @method Phaser.RenderTexture.prototype.render
-* @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapText|Phaser.Group} displayObject - The display object to render to this texture.
-* @param {Phaser.Matrix} [matrix] - Optional matrix to apply to the display object before rendering. If null or undefined it will use the worldTransform matrix of the given display object.
-* @param {boolean} [clear=false] - If true the texture will be cleared before the display object is drawn.
-*/
-Phaser.RenderTexture.prototype.render = function (displayObject, matrix, clear) {
-
-    if (matrix === undefined || matrix === null)
-    {
-        this._tempMatrix.copyFrom(displayObject.worldTransform);
-    }
-    else
-    {
-        this._tempMatrix.copyFrom(matrix);
-    }
-
-    if (this.renderer.type === PIXI.WEBGL_RENDERER)
-    {
-        this.renderWebGL(displayObject, this._tempMatrix, clear);
-    }
-    else
-    {
-        this.renderCanvas(displayObject, this._tempMatrix, clear);
-    }
+    this.render(displayObject, this._tempMatrix, clear, false);
 
 };
