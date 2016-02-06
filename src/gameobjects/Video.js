@@ -852,7 +852,7 @@ Phaser.Video.prototype = {
 
         if (!this.disableTextureUpload && this.playing)
         {
-            // this.baseTexture.dirty();
+            this.baseTexture.update();
         }
 
     },
