@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.5 "Sienda" - Built: Fri Feb 05 2016 23:00:21
+* v2.4.5 "Sienda" - Built: Sat Feb 06 2016 00:01:36
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -37304,12 +37304,6 @@ Phaser.Stage = function (game) {
     */
     this._bgColor = { r: 0, g: 0, b: 0, a: 0, color: 0, rgba: '#000000' };
 
-    if (!this.game.transparent)
-    {
-        //  transparent = 0,0,0,0 - otherwise r,g,b,1
-        this._bgColor.a = 1;
-    }
-
     if (game.config)
     {
         this.parseConfig(game.config);
@@ -37565,11 +37559,7 @@ Phaser.Stage.prototype.setBackgroundColor = function (color) {
     Phaser.Color.valueToColor(color, this._bgColor);
     Phaser.Color.updateColor(this._bgColor);
 
-    //  For gl.clearColor (canvas uses _bgColor.rgba)
-    this._bgColor.r /= 255;
-    this._bgColor.g /= 255;
-    this._bgColor.b /= 255;
-    this._bgColor.a = 1;
+    this.game.renderer.backgroundColor = this._bgColor.color;
 
 };
 
@@ -40862,7 +40852,8 @@ Phaser.Game.prototype = {
 
         if (this.resolution === 0)
         {
-            this.resolution = this.device.pixelRatio;
+            // this.resolution = this.device.pixelRatio;
+            this.resolution = 1;
         }
 
         // this.width *= this.resolution;
@@ -40881,8 +40872,6 @@ Phaser.Game.prototype = {
         this.onFocus = new Phaser.Signal();
 
         this.isBooted = true;
-
-        PIXI.game = this;
 
         this.math = Phaser.Math;
 
@@ -51781,7 +51770,12 @@ Phaser.SpriteBatch = function (game, parent, name, addToStage) {
 
     if (parent === undefined || parent === null) { parent = game.world; }
 
-    PIXI.SpriteBatch.call(this);
+    PIXI.ParticleContainer.call(this, 15000, {
+        scale: true,
+        position: true,
+        rotation: true,
+        alpha: true
+    });
 
     Phaser.Group.call(this, game, parent, name, addToStage);
 
@@ -51793,7 +51787,7 @@ Phaser.SpriteBatch = function (game, parent, name, addToStage) {
 
 };
 
-Phaser.SpriteBatch.prototype = Phaser.Utils.extend(true, Phaser.SpriteBatch.prototype, Phaser.Group.prototype, PIXI.SpriteBatch.prototype);
+Phaser.SpriteBatch.prototype = Phaser.Utils.extend(true, Phaser.SpriteBatch.prototype, Phaser.Group.prototype, PIXI.ParticleContainer.prototype);
 
 Phaser.SpriteBatch.prototype.constructor = Phaser.SpriteBatch;
 

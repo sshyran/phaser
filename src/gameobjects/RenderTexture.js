@@ -46,7 +46,7 @@ Phaser.RenderTexture = function (game, width, height, key, scaleMode, resolution
     */
     this._tempMatrix = new PIXI.Matrix();
 
-    PIXI.RenderTexture.call(this, width, height, this.game.renderer, scaleMode, resolution);
+    PIXI.RenderTexture.call(this, this.game.renderer, width, height, scaleMode, resolution);
 
     this.render = Phaser.RenderTexture.prototype.render;
 
