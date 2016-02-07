@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.5 "Sienda" - Built: Sun Feb 07 2016 17:31:02
+* v2.4.5 "Sienda" - Built: Sun Feb 07 2016 18:24:16
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -79222,8 +79222,10 @@ Phaser.ScaleManager.prototype = {
             }
             else if (scaleMode === Phaser.ScaleManager.NO_SCALE)
             {
-                this.width = this.game.width / this.game.device.pixelRatio;
-                this.height = this.game.height / this.game.device.pixelRatio;
+                // this.width = this.game.width / this.game.device.pixelRatio;
+                // this.height = this.game.height / this.game.device.pixelRatio;
+                this.width = this.game.width;
+                this.height = this.game.height;
             }
             else if (scaleMode === Phaser.ScaleManager.USER_SCALE)
             {
