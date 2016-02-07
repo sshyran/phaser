@@ -509,6 +509,23 @@ Phaser.BitmapText.prototype.purgeGlyphs = function () {
 };
 
 /**
+* Removes all glyphs from this BitmapText.
+*
+* @method Phaser.BitmapText.prototype.clearGlyphs
+* @private
+*/
+Phaser.BitmapText.prototype.clearGlyphs = function () {
+
+    for (var i = 0; i < this._glyphs.length; i++)
+    {
+        this._glyphs[i].destroy();
+    }
+
+    this._glyphs = [];
+
+};
+
+/**
 * Updates the transform of this object.
 *
 * @method Phaser.BitmapText.prototype.updateTransform

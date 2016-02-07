@@ -536,12 +536,8 @@ Phaser.Game.prototype = {
 
         if (this.resolution === 0)
         {
-            // this.resolution = this.device.pixelRatio;
-            this.resolution = 1;
+            this.resolution = this.device.pixelRatio;
         }
-
-        // this.width *= this.resolution;
-        // this.height *= this.resolution;
 
         //  The game width / height must be an integer
         this.width = Math.floor(this.width);
