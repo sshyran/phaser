@@ -1075,7 +1075,7 @@ Phaser.TilemapLayer.prototype.render = function () {
         this.renderDebug();
     }
 
-    // this.texture.baseTexture.dirty();
+    this.texture.baseTexture.update();
 
     this.dirty = false;
 
