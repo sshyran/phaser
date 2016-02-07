@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.5 "Sienda" - Built: Sun Feb 07 2016 18:24:16
+* v2.4.5 "Sienda" - Built: Sun Feb 07 2016 23:52:35
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -91235,7 +91235,7 @@ Phaser.TilemapLayer.prototype.render = function () {
         this.renderDebug();
     }
 
-    // this.texture.baseTexture.dirty();
+    this.texture.baseTexture.update();
 
     this.dirty = false;
 
