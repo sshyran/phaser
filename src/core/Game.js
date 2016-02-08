@@ -99,7 +99,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @property {boolean} antialias - Anti-alias graphics. By default scaled images are smoothed in Canvas and WebGL, set anti-alias to false to disable this globally.
     * @default
     */
-    this.antialias = true;
+    this.antialias = false;
 
     /**
     * @property {boolean} preserveDrawingBuffer - The value of the preserveDrawingBuffer flag affects whether or not the contents of the stencil buffer is retained after rendering.
