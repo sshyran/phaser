@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.5 "Sienda" - Built: Mon Feb 08 2016 20:52:13
+* v2.4.5 "Sienda" - Built: Mon Feb 08 2016 20:56:51
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -71730,7 +71730,7 @@ Phaser.Text.prototype.updateTexture = function () {
 
     this.texture.requiresReTint = true;
 
-    // this.texture.baseTexture.dirty();
+    this.texture.baseTexture.update();
 
 };
 
