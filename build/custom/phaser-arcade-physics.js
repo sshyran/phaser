@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.5 "Sienda" - Built: Sun Feb 07 2016 23:52:35
+* v2.4.5 "Sienda" - Built: Mon Feb 08 2016 20:52:22
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -40423,7 +40423,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @property {boolean} antialias - Anti-alias graphics. By default scaled images are smoothed in Canvas and WebGL, set anti-alias to false to disable this globally.
     * @default
     */
-    this.antialias = true;
+    this.antialias = false;
 
     /**
     * @property {boolean} preserveDrawingBuffer - The value of the preserveDrawingBuffer flag affects whether or not the contents of the stencil buffer is retained after rendering.
