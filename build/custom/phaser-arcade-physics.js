@@ -7,7 +7,7 @@
 *
 * Phaser - http://phaser.io
 *
-* v2.4.5 "Sienda" - Built: Mon Feb 08 2016 20:56:59
+* v2.4.5 "Sienda" - Built: Tue Feb 09 2016 11:42:27
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -77286,7 +77286,7 @@ Phaser.SoundManager.prototype = {
     */
     setTouchLock: function () {
 
-        if (this.noAudio || window['PhaserGlobal'].disableAudio === true)
+        if (this.noAudio || (window['PhaserGlobal'] && window['PhaserGlobal'].disableAudio === true))
         {
             return;
         }
